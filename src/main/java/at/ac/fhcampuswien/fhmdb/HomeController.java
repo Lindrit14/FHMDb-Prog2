@@ -1,19 +1,26 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
     @FXML
@@ -33,6 +40,7 @@ public class HomeController implements Initializable {
 
     public List<Movie> allMovies = Movie.initializeMovies();
 
+
     private final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
@@ -45,21 +53,38 @@ public class HomeController implements Initializable {
 
         // TODO add genre filter items with genreComboBox.getItems().addAll(...)
         genreComboBox.setPromptText("Filter by Genre");
+        genreComboBox.getItems().addAll(Genre.values());
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
 
-        // Sort button example:
-        sortBtn.setOnAction(actionEvent -> {
-            if(sortBtn.getText().equals("Sort (asc)")) {
-                // TODO sort observableMovies ascending
-                sortBtn.setText("Sort (desc)");
-            } else {
-                // TODO sort observableMovies descending
-                sortBtn.setText("Sort (asc)");
+        searchBtn.setOnAction(actionEvent -> {
+            observableMovies.clear();
+            System.out.println(allMovies);
+            for (Movie movie : allMovies) {
+                if ((movie.getTitle().toLowerCase().contains(searchField.getText().toLowerCase())
+                        || movie.getDescription().toLowerCase().contains(searchField.getText().toLowerCase()))){
+                    System.out.println(movie);
+                    observableMovies.add(movie);
+                }
             }
         });
 
+        // Sort button example:
+        sortBtn.setOnAction(actionEvent -> {
+            Comparator<Movie> comparator = (movie1, movie2) -> movie1.getTitle().compareTo(movie2.getTitle());
 
+            if(sortBtn.getText().equals("Sort (asc)")) {
+                // TODO sort observableMovies ascending
+                comparator = Comparator.comparing(Movie::getTitle);
+                FXCollections.sort(observableMovies, comparator);
+                sortBtn.setText("Sort (desc)");
+            } else {
+                // TODO sort observableMovies descending
+                comparator = comparator.reversed();
+                FXCollections.sort(observableMovies, comparator);
+                sortBtn.setText("Sort (asc)");
+            }
+        });
     }
 }
