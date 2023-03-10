@@ -12,14 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
@@ -30,10 +29,10 @@ public class HomeController implements Initializable {
     public TextField searchField;
 
     @FXML
-    public JFXListView movieListView;
+    public JFXListView<Movie> movieListView;
 
     @FXML
-    public JFXComboBox genreComboBox;
+    public JFXComboBox<Genre> genreComboBox;
 
     @FXML
     public JFXButton sortBtn;
@@ -59,15 +58,22 @@ public class HomeController implements Initializable {
         // either set event handlers in the fxml file (onAction) or add them here
 
         searchBtn.setOnAction(actionEvent -> {
-            observableMovies.clear();
-            System.out.println(allMovies);
+            List<Movie> movies = new ArrayList<>();
+            if(genreComboBox.getPromptText().equals("Filter by Genre"))
+                genreComboBox.getSelectionModel().selectFirst();
+            if (searchField.getText().isEmpty()
+                    && genreComboBox.getSelectionModel().getSelectedItem().toString().equals("NO_GENRE")){
+                movies.addAll(allMovies);
+            }
             for (Movie movie : allMovies) {
-                if ((movie.getTitle().toLowerCase().contains(searchField.getText().toLowerCase())
-                        || movie.getDescription().toLowerCase().contains(searchField.getText().toLowerCase()))){
-                    System.out.println(movie);
-                    observableMovies.add(movie);
+                if ((!searchField.getText().isEmpty())
+                        && ((movie.getTitle().toLowerCase().contains(searchField.getText().toLowerCase())
+                        || movie.getDescription().toLowerCase().contains(searchField.getText().toLowerCase()))
+                        && genreComboBox.getSelectionModel().getSelectedItem().toString().equals("NO_GENRE"))){
+                    movies.add(movie);
                 }
             }
+            observableMovies.setAll(movies);
         });
 
         // Sort button example:
