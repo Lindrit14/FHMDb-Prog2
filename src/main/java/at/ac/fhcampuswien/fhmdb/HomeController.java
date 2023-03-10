@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
@@ -12,8 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+
 
 public class HomeController implements Initializable {
     @FXML
@@ -23,15 +24,16 @@ public class HomeController implements Initializable {
     public TextField searchField;
 
     @FXML
-    public JFXListView movieListView;
+    public JFXListView<Movie> movieListView;
 
     @FXML
-    public JFXComboBox genreComboBox;
+    public JFXComboBox<Genre> genreComboBox;
 
     @FXML
     public JFXButton sortBtn;
 
     public List<Movie> allMovies = Movie.initializeMovies();
+
 
     private final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
@@ -45,21 +47,45 @@ public class HomeController implements Initializable {
 
         // TODO add genre filter items with genreComboBox.getItems().addAll(...)
         genreComboBox.setPromptText("Filter by Genre");
+        genreComboBox.getItems().addAll(Genre.values());
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
 
+        searchBtn.setOnAction(actionEvent -> {
+            List<Movie> movies = new ArrayList<>();
+            if(genreComboBox.getPromptText().equals("Filter by Genre"))
+                genreComboBox.getSelectionModel().selectFirst();
+            if (searchField.getText().isEmpty()
+                    && genreComboBox.getSelectionModel().getSelectedItem().toString().equals("NO_GENRE")){
+                movies.addAll(allMovies);
+            }
+            for (Movie movie : allMovies) {
+                if ((!searchField.getText().isEmpty())
+                        && ((movie.getTitle().toLowerCase().contains(searchField.getText().toLowerCase())
+                        || movie.getDescription().toLowerCase().contains(searchField.getText().toLowerCase()))
+                        && genreComboBox.getSelectionModel().getSelectedItem().toString().equals("NO_GENRE"))){
+                    movies.add(movie);
+                }
+            }
+            observableMovies.setAll(movies);
+        });
+
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
+            Comparator<Movie> comparator = (movie1, movie2) -> movie1.getTitle().compareTo(movie2.getTitle());
+
             if(sortBtn.getText().equals("Sort (asc)")) {
                 // TODO sort observableMovies ascending
+                comparator = Comparator.comparing(Movie::getTitle);
+                FXCollections.sort(observableMovies, comparator);
                 sortBtn.setText("Sort (desc)");
             } else {
                 // TODO sort observableMovies descending
+                comparator = comparator.reversed();
+                FXCollections.sort(observableMovies, comparator);
                 sortBtn.setText("Sort (asc)");
             }
         });
-
-
     }
 }
