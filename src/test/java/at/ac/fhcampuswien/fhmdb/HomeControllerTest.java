@@ -290,4 +290,187 @@ class HomeControllerTest {
         //then
         assertEquals(expectedList,actual);
     }
+
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_one_movie(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie2);
+
+
+        //when
+        actual = homeController.filterOptions(inputList,"","ADVENTURE",inputList);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_two_movies(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie);
+        expectedList.add(movie3);
+
+        //when
+        actual = homeController.filterOptions(inputList,"","DRAMA",inputList);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_three_movies(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie);
+        expectedList.add(movie2);
+        expectedList.add(movie3);
+
+        //when
+        actual = homeController.filterOptions(inputList,"","ACTION",inputList);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_two_movies_filter_descending(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie3);
+        expectedList.add(movie);
+
+        //when
+        actual = homeController.filterOptions(inputList,"","DRAMA",inputList);
+        actual = homeController.sortDesc(actual);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_two_movies_filter_ascending(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie);
+        expectedList.add(movie3);
+
+        //when
+        actual = homeController.filterOptions(inputList,"","DRAMA",inputList);
+        actual = homeController.sortAsc(actual);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_three_movies_filter_descending(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie2);
+        expectedList.add(movie3);
+        expectedList.add(movie);
+
+        //when
+        actual = homeController.filterOptions(inputList,"","ACTION",inputList);
+        actual = homeController.sortDesc(actual);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
+
+    @Test
+    public void using_filter_with_genre_and_no_query_show_three_movies_filter_ascending(){
+        //given
+        Movie movie = new Movie("CREED III", "Adonis Creed tries very hard to be like Rocky", Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.SPORT));
+        Movie movie2 = new Movie("ONE PIECE RED", "Ruffy and his CREW have a good sleep, while Shanks and his CREW solos", Arrays.asList(Genre.ACTION, Genre.MUSICAL,Genre.ANIMATION,Genre.ADVENTURE));
+        Movie movie3 = new Movie("Inception", "Man goes to sleep, goes to sleep again and again", Arrays.asList(Genre.ACTION, Genre.DRAMA,Genre.SCIENCE_FICTION,Genre.MYSTERY));
+
+        List<Movie> inputList = new ArrayList<>();
+        inputList.add(movie);
+        inputList.add(movie2);
+        inputList.add(movie3);
+
+        List<Movie> actual = new ArrayList<>();
+
+        List<Movie> expectedList = new ArrayList<>();
+        expectedList.add(movie);
+        expectedList.add(movie3);
+        expectedList.add(movie2);
+
+        //when
+        actual = homeController.filterOptions(inputList,"","ACTION",inputList);
+        actual = homeController.sortAsc(actual);
+
+        //then
+        assertEquals(expectedList,actual);
+    }
 }
