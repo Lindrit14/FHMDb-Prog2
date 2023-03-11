@@ -18,9 +18,8 @@ import java.util.*;
 
 
 public class HomeController implements Initializable {
-
-    boolean isSorted = false;
-
+    @FXML
+    public JFXButton resetBtn;
     @FXML
     public JFXButton searchBtn;
 
@@ -38,85 +37,76 @@ public class HomeController implements Initializable {
 
     public List<Movie> allMovies = Movie.initializeMovies();
 
+
     public List<Movie> allSortedMovies = new ArrayList<>();
-    public List<Movie> allSortedMovies2 = new ArrayList<>();
-    private final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    public final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
 
-    Comparator<Movie> comparator = (movie1, movie2) -> movie1.getTitle().compareTo(movie2.getTitle());
-    Comparator<Movie> comparator2 = (movie1, movie2) -> movie1.getTitle().compareTo(movie2.getTitle());
+    Comparator<Movie> comparatorForObserve = (movie1, movie2) -> movie1.getTitle().compareTo(movie2.getTitle());
+    Comparator<Movie> comparatorForList = (movie1, movie2) -> movie1.getTitle().compareTo(movie2.getTitle());
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        observableMovies.addAll(allMovies);         // add dummy data to observable list
+        //on Load filling Lists
+        observableMovies.addAll(allMovies);
         allSortedMovies.addAll(allMovies);
-        allSortedMovies2.addAll(allMovies);
+
         // initialize UI stuff
         movieListView.setItems(observableMovies);   // set data of observable list to list view
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
 
-        // TODO add genre filter items with genreComboBox.getItems().addAll(...)
+        //ComboBox on Load settings
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
         genreComboBox.getSelectionModel().selectFirst();
 
-        // TODO add event handlers to buttons and call the regarding methods
-        // either set event handlers in the fxml file (onAction) or add them here
-
-
-        // Sort button example:
+        // Sort button example
         sortBtn.setOnAction(actionEvent -> {
             //
             if(sortBtn.getText().equals("Sort (asc)")) {
-                // TODO sort observableMovies ascending
                 sortDesc(observableMovies);
                 sortDesc(allSortedMovies);
-                sortDesc(allSortedMovies2);
                 sortBtn.setText("Sort (desc)");
             } else {
-                // TODO sort observableMovies descending
                 sortAsc(observableMovies);
                 sortAsc(allSortedMovies);
-                sortAsc(allSortedMovies2);
                 sortBtn.setText("Sort (asc)");
             }
         });
     }
 
+    //sorting for ascending when a observableList is given
     public ObservableList<Movie> sortAsc(ObservableList<Movie> list){
-        comparator = Comparator.comparing(Movie::getTitle);
-        FXCollections.sort(list, comparator);
+        comparatorForObserve = Comparator.comparing(Movie::getTitle);
+        FXCollections.sort(list, comparatorForObserve);
         return list;
     }
-
+    //sorting for descending when a observableList is given
     public ObservableList<Movie> sortDesc(ObservableList<Movie> list){
-        comparator = Comparator.comparing(Movie::getTitle).reversed();
-        FXCollections.sort(list, comparator);
+        comparatorForObserve = Comparator.comparing(Movie::getTitle).reversed();
+        FXCollections.sort(list, comparatorForObserve);
         return list;
     }
 
+    //sort for descending when array list is given
     public List<Movie> sortDesc(List<Movie> list){
-        list.sort(Collections.reverseOrder(comparator2));
+        list.sort(Collections.reverseOrder(comparatorForList));
         return list;
     }
+    //sort for ascending when array list is given
 
     public List<Movie> sortAsc(List<Movie> list){
-        list.sort(comparator2);
+        list.sort(comparatorForList);
         return list;
     }
 
-
     public ObservableList<Movie> filterMovies(ActionEvent actionEvent) {
+        //temporary moviesList
         List<Movie> movies = new ArrayList<>();
 
-        List<Movie> sortedMovies = new ArrayList<>();
-       sortedMovies.addAll(observableMovies.stream().toList());
-
-       allSortedMovies.clear();
-       allSortedMovies.addAll(allSortedMovies2);
-
-        //show all movies, if nothing is being filtered for
+       //fill the empty list with a sortedMovieList
+        List<Movie> allSortedMoviesForObserve = new ArrayList<>(allSortedMovies);
 
         //shows movies filtered by title OR description
         for (Movie movie : allMovies) {
@@ -143,11 +133,29 @@ public class HomeController implements Initializable {
                 movies.add(movie);
             }
         }
-        allSortedMovies.retainAll(movies);
+        //only elements which are the same in movies and allSortedMoviesForObserve get added to allSortedMoviesforObserve
+        allSortedMoviesForObserve.retainAll(movies);
 
 
-        observableMovies.setAll(allSortedMovies);
+        observableMovies.setAll(allSortedMoviesForObserve);
 
         return observableMovies;
     }
+
+
+
+    //reset to the original view
+    public void resetObserveMovies(ActionEvent actionEvent) {
+        observableMovies.setAll(allMovies);
+        searchField.setText("");
+        genreComboBox.getSelectionModel().selectFirst();
+
+    }
+
+    public void initState() {
+        observableMovies.clear();
+        observableMovies.setAll(allMovies);
+    }
+
+
 }
