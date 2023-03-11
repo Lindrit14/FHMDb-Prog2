@@ -101,44 +101,48 @@ public class HomeController implements Initializable {
         return list;
     }
 
-    public ObservableList<Movie> filterMovies(ActionEvent actionEvent) {
+    public List<Movie> filterOptions(List<Movie> listOfMovies,String searchString, String searchGenre,List<Movie> sortedList){
         //temporary moviesList
         List<Movie> movies = new ArrayList<>();
 
-       //fill the empty list with a sortedMovieList
-        List<Movie> allSortedMoviesForObserve = new ArrayList<>(allSortedMovies);
+        //fill the empty list with a sortedMovieList
+        List<Movie> allSortedMoviesForObserve = new ArrayList<>(sortedList);
 
         //shows movies filtered by title OR description
-        for (Movie movie : allMovies) {
-            if (searchField.getText().isEmpty()
-                    && genreComboBox.getSelectionModel().getSelectedItem().toString().equals("NO_FILTER")){
+        for (Movie movie : listOfMovies) {
+            if (searchString.isEmpty()
+                    && searchGenre.equals("NO_FILTER")){
                 movies.add(movie);
             }
-            if ((!searchField.getText().isEmpty())
-                    && ((movie.getTitle().toLowerCase().contains(searchField.getText().toLowerCase())
-                    || movie.getDescription().toLowerCase().contains(searchField.getText().toLowerCase()))
-                    && genreComboBox.getSelectionModel().getSelectedItem().toString().equals("NO_FILTER"))){
+            if ((!searchString.isEmpty())
+                    && ((movie.getTitle().toLowerCase().contains(searchString.toLowerCase())
+                    || movie.getDescription().toLowerCase().contains(searchString.toLowerCase()))
+                    && searchGenre.equals("NO_FILTER"))){
                 movies.add(movie);
             }
             //shows movies filtered by title OR description AND genres
-            if ((!searchField.getText().isEmpty())
-                    && ((movie.getTitle().toLowerCase().contains(searchField.getText().toLowerCase())
-                    || movie.getDescription().toLowerCase().contains(searchField.getText().toLowerCase()))
-                    && movie.getGenres().toString().contains(genreComboBox.getSelectionModel().getSelectedItem().toString()))){
+            if ((!searchString.isEmpty())
+                    && ((movie.getTitle().toLowerCase().contains(searchString.toLowerCase())
+                    || movie.getDescription().toLowerCase().contains(searchString.toLowerCase()))
+                    && movie.getGenres().toString().contains(searchGenre))){
                 movies.add(movie);
             }
             //shows movies only by selected genre
-            if ((searchField.getText().isEmpty())
-                    && movie.getGenres().toString().contains(genreComboBox.getSelectionModel().getSelectedItem().toString())){
+            if ((searchString.isEmpty())
+                    && movie.getGenres().toString().contains(searchGenre)){
                 movies.add(movie);
             }
         }
         //only elements which are the same in movies and allSortedMoviesForObserve get added to allSortedMoviesforObserve
         allSortedMoviesForObserve.retainAll(movies);
 
+        List<Movie> returnedMovies = new ArrayList<>();
+        returnedMovies.addAll(allSortedMoviesForObserve);
+        return returnedMovies;
+    }
 
-        observableMovies.setAll(allSortedMoviesForObserve);
-
+    public ObservableList<Movie> filterMovies(ActionEvent actionEvent) {
+        observableMovies.setAll(filterOptions(allMovies,searchField.getText(),genreComboBox.getSelectionModel().getSelectedItem().toString(),allSortedMovies));
         return observableMovies;
     }
 
