@@ -16,24 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HomeControllerTest {
 
-
-
-    List<Movie> movieList;
-    ObservableList<Movie> actualmovieObservableList;
-
-    List<Movie> dummyList;
-
     private static HomeController homeController;
     @BeforeAll
     static void init(){
         homeController = new HomeController();
     }
     @Test
-    public void test1(){
+    public void show_that_observableList_is_same_to_all_movies_not_filtered(){
         homeController.initState();
         assertEquals(homeController.allMovies, homeController.observableMovies);
     }
-
 
     @Test
     public void using_sort_Asc_on_un_filtered_list_gets_sorted_ascending_observable_list(){
@@ -60,7 +52,6 @@ class HomeControllerTest {
             actualObservableList = homeController.sortAsc(actualObservableList);
 
         //then
-
             assertEquals(expectedObservableList,actualObservableList);
     }
 
