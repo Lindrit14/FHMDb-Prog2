@@ -12,7 +12,8 @@ import javafx.scene.paint.Color;
 public class MovieCell extends ListCell<Movie> {
     private final Label title = new Label();
     private final Label detail = new Label();
-    private final VBox layout = new VBox(title, detail);
+    private final Label genre = new Label();
+    private final VBox layout = new VBox(title, detail, genre);
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
@@ -20,6 +21,7 @@ public class MovieCell extends ListCell<Movie> {
 
         if (empty || movie == null) {
             setText(null);
+            setGraphic(null);
         } else {
             this.getStyleClass().add("movie-cell");
             title.setText(movie.getTitle());
@@ -28,15 +30,18 @@ public class MovieCell extends ListCell<Movie> {
                             ? movie.getDescription()
                             : "No description available"
             );
-
+            genre.setText(movie.getGenres().toString().replaceAll("\\[","").replaceAll("\\]",""));
 
             // color scheme
             title.getStyleClass().add("text-yellow");
             detail.getStyleClass().add("text-white");
+            genre.getStyleClass().add("text-white");
+            genre.getStyleClass().add("text-cursive");
             layout.setBackground(new Background(new BackgroundFill(Color.web("#454545"), null, null)));
 
             // layout
             title.fontProperty().set(title.getFont().font(20));
+            genre.setMaxWidth(this.getScene().getWidth() - 30);
             detail.setMaxWidth(this.getScene().getWidth() - 30);
             detail.setWrapText(true);
             layout.setPadding(new Insets(10));
