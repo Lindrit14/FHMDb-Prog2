@@ -19,10 +19,6 @@
     -fx-text-fill: #ffffff;
 }
 
-.text-cursive {
-    -fx-font-style: italic;
-}
-
 .list-view .list-cell:even {
     -fx-background-color: black;
     -fx-text-fill: white;
